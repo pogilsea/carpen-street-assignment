@@ -1,0 +1,5 @@
+export enum ErrorCode {
+    SQL_WRITE_ERROR = 'SQL0001',
+    SQL_READ_ERROR = 'SQL0002',
+    NO_SELECT_CONDITION = 'SQL1001',
+}
