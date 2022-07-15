@@ -39,6 +39,7 @@ export interface IProductByEditor {
     assertProductEditable(status: ProductStatus): void;
     assertProductCompleteReviewable(status: ProductStatus): void;
     assertProductAlreadyCompleteReview(status: ProductStatus): void;
+    assertProductCommissionRateUndefined(commissionRate?: number | null): void;
     assertProductRollbackReview(status: ProductStatus): void;
     assertProductKoreanLetter(title?: string, content?: string): void;
 }
@@ -92,6 +93,13 @@ export class ProductByEditor implements IProductByEditor {
         const errorCode = ErrorCode.PRODUCT_STATUS_NOT_CONFIRM_EDITABLE;
         if (status !== ProductStatus.REVIEW_REQUESTED) {
             throw createHttpError(HttpStatus.BAD_REQUEST, {errorCode, errorMessage});
+        }
+    }
+    assertProductCommissionRateUndefined(commissionRate?: number | null) {
+        const errorMessage = `Commission rate was not defined. Require to set commission rate first`;
+        const errorCode = ErrorCode.PRODUCT_STATUS_NOT_CONFIRM_EDITABLE;
+        if (!commissionRate) {
+            throw createHttpError(HttpStatus.CONFLICT, {errorCode, errorMessage});
         }
     }
     assertProductKoreanLetter(title?: string, content?: string) {

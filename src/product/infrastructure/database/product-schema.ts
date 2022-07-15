@@ -15,10 +15,10 @@ type ProductTableSchemaNonNullable = {
     createdAt: string;
 };
 type ProductTableSchemaNullableType = {
-    titleEng: string;
-    titleChn: string;
-    contentEng: string;
-    contentChn: string;
+    titleEn: string;
+    titleCn: string;
+    contentEn: string;
+    contentCn: string;
     commissionRate: number;
     reviewRequestedAt: string;
     publishedAt: string;

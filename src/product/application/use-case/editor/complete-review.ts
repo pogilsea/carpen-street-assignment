@@ -24,12 +24,15 @@ export class CompleteReviewUseCase {
         const {productId} = param;
         //리퀘스트 파라미터 유효성 검사
         this.validator.execute(DTOValidation, param);
-        const product = await this.repository.readOne<{status: ProductStatus; title: string; content: string}>(
-            {productId},
-            {fields: ['status', 'title', 'content']},
-        );
+        const product = await this.repository.readOne<{
+            status: ProductStatus;
+            title: string;
+            content: string;
+            commissionRate: number | null;
+        }>({productId}, {fields: ['status', 'title', 'content', 'commissionRate']});
         this.product.assertExistProduct(product);
         this.product.assertProductCompleteReviewable(product.status);
+        this.product.assertProductCommissionRateUndefined(product.commissionRate);
         this.product.assertProductAlreadyCompleteReview(product.status);
         // 디비 저장용 데이터 변환
         const [titleCn, contentCn, titleEn, contentEn] = await Promise.all([

@@ -7,19 +7,21 @@ export type RequestReviewProductFromDB = Readonly<{
     id: number;
     title: string;
     status: ProductStatus;
-    content: number;
+    content: string;
     price: number;
     commissionRate: number;
     createdAt: string;
+    reviewRequestedAt: string;
 }>;
 export type QueryRequestReviewProductListItemDTO = Readonly<{
     id: number;
     title: string;
-    content: number;
+    content: string;
     price: number;
     status: string;
     commissionRate: number | null;
     commissionAmount: number;
+    reviewRequestedAt: string;
     createdAt: string;
 }>;
 
@@ -40,7 +42,7 @@ export class QueryRequestReviewProducts {
         return this.getViewModelList(requestReviews.concat(requestEdits));
     }
     getFields() {
-        return ['id', 'price', 'title', 'content', 'status', 'commissionRate', 'createdAt'];
+        return ['id', 'price', 'title', 'content', 'status', 'commissionRate', 'createdAt', 'reviewRequestedAt'];
     }
     getViewModelList = (response: RequestReviewProductFromDB[]): QueryRequestReviewProductListItemDTO[] => {
         return response.map((item) => {

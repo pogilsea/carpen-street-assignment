@@ -5,23 +5,22 @@ import {IProductBaseRepository} from '@infrastructure/database/product-base-repo
 
 export type QueryPublishedProductsProps = {
     nationCode?: NationValue;
-    filterValue: string;
 };
 export type PublishedProductFromDB = Readonly<{
     id: number;
     title: string;
-    content: number;
+    content: string;
     price: number;
     publishedAt: string;
 }>;
 export type PublishedProductListItemDTO = Readonly<{
     id: number;
     title: string;
-    content: number;
+    content: string;
     price: number;
     publishedAt: string;
 }>;
-type NationValue = 'kor' | 'eng' | 'chn';
+type NationValue = 'ko' | 'en' | 'cn';
 export class QueryPublishedProducts {
     protected repository: IProductBaseRepository;
     protected validator: IBaseValidator;
@@ -31,7 +30,7 @@ export class QueryPublishedProducts {
     }
 
     async run(props: QueryPublishedProductsProps) {
-        const nationCode = props.nationCode || 'kor';
+        const nationCode = props.nationCode || 'ko';
         const fields = this.getFields(nationCode);
         const status = ProductStatus.PUBLISHED;
         const currencyRate = this.getCurrencyRate(nationCode);
@@ -39,22 +38,22 @@ export class QueryPublishedProducts {
         return this.getViewModelList(product, currencyRate);
     }
     getCurrencyRate(nation: NationValue) {
-        if (nation === 'eng') {
+        if (nation === 'en') {
             return 0.00075;
         }
-        if (nation === 'chn') {
+        if (nation === 'cn') {
             return 0.0051;
         }
         return 1;
     }
     getFields(nation: NationValue) {
-        const fields = ['id', 'price', 'publishedAt'];
-        if (nation === 'eng') {
-            fields.concat(['titleEng as title', 'contentEng as content']);
-        } else if (nation === 'chn') {
-            fields.concat(['titleChn as title', 'contentChn as content']);
+        let fields = ['id', 'price', 'publishedAt'];
+        if (nation === 'en') {
+            fields = fields.concat(['titleEn as title', 'contentEn as content']);
+        } else if (nation === 'cn') {
+            fields = fields.concat(['titleCn as title', 'contentCn as content']);
         } else {
-            fields.concat(['title', 'content']);
+            fields = fields.concat(['title', 'content']);
         }
         return fields;
     }
