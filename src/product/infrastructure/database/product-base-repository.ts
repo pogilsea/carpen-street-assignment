@@ -39,15 +39,15 @@ export class ProductBaseRepository extends MySQLWrapper implements IProductBaseR
     }
     protected getKeyConditions(query: Partial<ProductTableKeyType>) {
         let conditions: ConditionType[] = [];
-        const {productId, editorId, status} = query;
+        const {productId, writerId, status} = query;
         if (productId) {
-            conditions.push({fieldName: 'po.id', value: productId});
+            conditions.push({fieldName: 'pd.id', value: productId});
         }
-        if (editorId) {
-            conditions.push({fieldName: 'po.editorId', value: editorId});
+        if (writerId) {
+            conditions.push({fieldName: 'pd.writerId', value: writerId});
         }
         if (status) {
-            conditions.push({fieldName: 'po.status', value: status});
+            conditions.push({fieldName: 'pd.status', value: status});
         }
         return conditions;
     }

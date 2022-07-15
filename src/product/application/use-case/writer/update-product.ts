@@ -4,13 +4,11 @@ import {ProductByWriterRepository} from '@domain/writer/product-repository';
 import {IProductByWriter, ProductByWriter} from '@domain/writer/product';
 import {ProductStatus} from '@infrastructure/database/product-schema';
 
-export type UpdateProductByWriterDTO = {
-    editorId: number;
-    productId: number;
+export type UpdateProductByWriterDTO = {writerId: number; productId: number} & Partial<{
     title: string;
     content: string;
     price: number;
-};
+}>;
 export class UpdateProductByWriterUseCase {
     protected product: IProductByWriter;
     protected repository: IProductByWriterRepository;
@@ -21,30 +19,27 @@ export class UpdateProductByWriterUseCase {
         this.validator = new Validator();
     }
 
-    async main(param: UpdateProductByWriterDTO) {
-        const {editorId, productId} = param;
-        //리퀘스트 파라미터 유효성 검사
+    async run(param: UpdateProductByWriterDTO) {
+        const {writerId, productId, title, content} = param;
+        console.log('param', param);
         this.validator.execute(DTOValidation, param);
-        const product = await this.repository.readOne<{status: ProductStatus}>({editorId, productId}, {fields: ['status']});
-        // 상품 정보 존재 확인
+        this.product.assertProductKoreanLetter(title, content);
+        const product = await this.repository.readOne<{status: ProductStatus}>({writerId, productId}, {fields: ['status']});
         this.product.assertExistProduct(product);
-        // 상품 검증 요청 가능 상태 확인
         this.product.assertProductNotEditable(product.status);
-        // 디비 저장용 데이터 변환
         const data = this.product.updateByWriter(param);
-        // 데이터 저장
         await this.repository.updateProductByWriter(data);
     }
 }
 const DTOValidation = {
     type: 'object',
     additionalProperties: false,
-    required: ['productId', 'editorId'],
+    required: ['productId', 'writerId'],
     properties: {
         title: {type: 'string', minLength: 1},
         content: {type: 'string', minLength: 1},
-        editorId: {type: 'number', minLength: 1},
-        productId: {type: 'number', minLength: 1},
-        price: {type: 'number', minLength: 1},
+        writerId: {type: 'number', minimum: 1},
+        productId: {type: 'number', minimum: 1},
+        price: {type: 'number', minimum: 1},
     },
 };

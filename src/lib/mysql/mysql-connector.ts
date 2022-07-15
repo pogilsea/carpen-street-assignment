@@ -3,6 +3,7 @@ import {OkPacket, Pool} from 'mysql';
 import createError from 'http-errors';
 import {HttpStatus} from '@lib/http/status-code';
 import {ErrorCode} from '@lib/http/error-code';
+import {envNumber, envString} from '@lib/environment';
 
 export class MySQLConnection {
     private static instance: MySQLConnection;
@@ -16,10 +17,10 @@ export class MySQLConnection {
     constructor() {
         const connectOptions: mySQL.PoolConfig = {
             connectionLimit: 10,
-            port: Number(process.env.MYSQL_PORT),
-            user: process.env.MYSQL_USER,
-            password: process.env.MYSQL_PWD,
-            database: process.env.MYSQL_DATABASE_NAME,
+            port: envNumber('MYSQL_PORT'),
+            user: envString('MYSQL_USER'),
+            password: envString('MYSQL_PWD'),
+            database: envString('MYSQL_DATABASE_NAME'),
             charset: 'utf8mb4',
             multipleStatements: true,
         };

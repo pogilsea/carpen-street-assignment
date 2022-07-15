@@ -1,5 +1,5 @@
 import {ProductBaseRepository} from '@infrastructure/database/product-base-repository';
-import {CompleteReview, ConfirmEditable, UpdateProductByEditor} from '@domain/editor/product';
+import {CompleteReview, RollbackReview, UpdateProductByEditor} from '@domain/editor/product';
 import {IProductByEditorRepository} from '@domain/editor/product-model';
 
 export class ProductByEditorRepository extends ProductBaseRepository implements IProductByEditorRepository {
@@ -11,7 +11,7 @@ export class ProductByEditorRepository extends ProductBaseRepository implements 
         const {productId, ...data} = props;
         return this.updateOne({productId}, data);
     }
-    confirmEditable(props: ConfirmEditable) {
+    rollbackReview(props: RollbackReview) {
         const {productId, ...data} = props;
         return this.updateOne({productId}, data);
     }

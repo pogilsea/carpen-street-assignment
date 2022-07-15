@@ -5,7 +5,7 @@ import {IProductByWriter, ProductByWriter} from '@domain/writer/product';
 import {ProductStatus} from '@infrastructure/database/product-schema';
 
 export type RequestReviewDTO = {
-    editorId: number;
+    writerId: number;
     productId: number;
 };
 export class RequestReviewUseCase {
@@ -18,15 +18,15 @@ export class RequestReviewUseCase {
         this.validator = new Validator();
     }
 
-    async main(param: RequestReviewDTO) {
-        const {editorId, productId} = param;
+    async run(param: RequestReviewDTO) {
+        const {writerId, productId} = param;
         //리퀘스트 파라미터 유효성 검사
         this.validator.execute(DTOValidation, param);
-        const product = await this.repository.readOne<{status: ProductStatus}>({editorId, productId}, {fields: ['status']});
+        const product = await this.repository.readOne<{status: ProductStatus}>({writerId, productId}, {fields: ['status']});
         // 상품 정보 존재 확인
         this.product.assertExistProduct(product);
         // 상품 검증 요청 가능 상태 확인
-        this.product.assertProductRequestReviewable(product.status);
+        this.product.assertProductHasRequestedReview(product.status);
         // 디비 저장용 데이터 변환
         const data = this.product.requestReview(productId);
         // 데이터 저장
@@ -36,9 +36,9 @@ export class RequestReviewUseCase {
 const DTOValidation = {
     type: 'object',
     additionalProperties: false,
-    required: ['editorId', 'productId'],
+    required: ['writerId', 'productId'],
     properties: {
-        editorId: {type: 'number', minLength: 1},
-        productId: {type: 'number', minLength: 1},
+        writerId: {type: 'number', minimum: 1},
+        productId: {type: 'number', minimum: 1},
     },
 };

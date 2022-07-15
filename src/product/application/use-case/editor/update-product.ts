@@ -20,18 +20,14 @@ export class UpdateProductByEditorUseCase {
         this.validator = new Validator();
     }
 
-    async main(param: UpdateProductByEditorDTO) {
-        const {productId} = param;
-        //리퀘스트 파라미터 유효성 검사
+    async run(param: UpdateProductByEditorDTO) {
+        const {productId, title, content} = param;
         this.validator.execute(DTOValidation, param);
+        this.product.assertProductKoreanLetter(title, content);
         const product = await this.repository.readOne<{status: ProductStatus}>({productId}, {fields: ['status']});
-        // 상품 정보 존재 확인
         this.product.assertExistProduct(product);
-        // 상품 검증 요청 가능 상태 확인
         this.product.assertProductEditable(product.status);
-        // 디비 저장용 데이터 변환
         const data = this.product.updateByEditor(param);
-        // 데이터 저장
         await this.repository.updateProductByEditor(data);
     }
 }
@@ -40,10 +36,10 @@ const DTOValidation = {
     additionalProperties: false,
     required: ['productId'],
     properties: {
-        productId: {type: 'number', minLength: 1},
+        productId: {type: 'number', minimum: 1},
         title: {type: 'string', minLength: 1},
         content: {type: 'string', minLength: 1},
-        price: {type: 'number', minLength: 1},
-        commissionRate: {type: 'number', minLength: 1},
+        price: {type: 'number', minimum: 1},
+        commissionRate: {type: 'number', minimum: 0},
     },
 };

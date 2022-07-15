@@ -32,10 +32,8 @@ function bq(str: string): string {
 
 function esc(str: any) {
     if (typeof str !== 'string') return str;
-    str = str.replace(/[\\0\n\r\b\t'"\x1a]/g, function (res: any) {
+    str = str.replace(/[\n\r\b\t'"\x1a]/g, function (res: any) {
         switch (res) {
-            case '\0':
-                return '\\0';
             case '\n':
                 return '\\n';
             case '\r':

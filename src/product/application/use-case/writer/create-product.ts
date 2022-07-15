@@ -3,7 +3,11 @@ import {ProductByWriterRepository} from '@domain/writer/product-repository';
 import {IProductByWriter, ProductByWriter} from '@domain/writer/product';
 import {IProductByWriterRepository} from '@domain/writer/product-model';
 
-export class CreateProductUseCase {
+export interface ICreateProductUseCase {
+    run(param: CreateProductDTO): Promise<number>;
+}
+
+export class CreateProductUseCase implements ICreateProductUseCase {
     protected product: IProductByWriter;
     protected repository: IProductByWriterRepository;
     protected validator: IBaseValidator;
@@ -13,19 +17,18 @@ export class CreateProductUseCase {
         this.validator = new Validator();
     }
 
-    async main(param: CreateProductDTO) {
-        //validation
+    run = async (param: CreateProductDTO) => {
+        const {content, title} = param;
         this.validator.execute(DTOValidation, param);
-        // 디비 저장용 데이터 변환
+        this.product.assertProductKoreanLetter(title, content);
         const data = this.product.create(param);
-        // 데이터 저장
         let {insertId} = await this.repository.createProduct(data);
         return insertId;
-    }
+    };
 }
 
 export type CreateProductDTO = {
-    editorId: number;
+    writerId: number;
     title: string;
     content: string;
     price: number;
@@ -34,11 +37,11 @@ export type CreateProductDTO = {
 const DTOValidation = {
     type: 'object',
     additionalProperties: false,
-    required: ['title', 'content', 'editorId', 'price'],
+    required: ['title', 'content', 'writerId', 'price'],
     properties: {
         title: {type: 'string', minLength: 1},
         content: {type: 'string', minLength: 1},
-        editorId: {type: 'number', minLength: 1},
-        price: {type: 'number', minLength: 1},
+        writerId: {type: 'number', minimum: 1},
+        price: {type: 'number', minimum: 1},
     },
 };
