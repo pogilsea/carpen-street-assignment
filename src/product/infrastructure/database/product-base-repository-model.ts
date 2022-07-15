@@ -4,8 +4,8 @@ import {ProductTableKeyType, ProductTableSchemaType} from '@infrastructure/datab
 
 export interface IProductBaseRepository extends IMySQLWrapper {
     insert(data: Omit<ProductTableSchemaType, 'id' | 'createdAt'>): Promise<OkPacket>;
-    readOne(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType): Promise<any>;
-    read(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType): Promise<any[]>;
+    readOne<T>(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType): Promise<T>;
+    read<T>(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType): Promise<T[]>;
     count(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType): Promise<number>;
     remove(keyObject: Partial<ProductTableKeyType>): Promise<OkPacket>;
     updateOne(keyObject: Partial<ProductTableKeyType>, param: Partial<ProductTableSchemaType>): Promise<OkPacket>;

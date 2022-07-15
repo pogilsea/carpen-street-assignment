@@ -22,16 +22,16 @@ export class ProductBaseRepository extends MySQLWrapper implements IProductBaseR
         const conditions = this.getKeyConditions(keyObject);
         return this._update(conditions, param);
     }
-    read(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType) {
+    read<T>(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType) {
         let conditions = this.getKeyConditions(keyObject);
         if (opt && opt.conditions) {
             conditions = conditions.concat(opt.conditions);
         }
-        return this._get<any>(conditions, {...opt});
+        return this._get<T>(conditions, {...opt});
     }
-    readOne(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType) {
+    readOne<T>(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType) {
         const conditions = this.getKeyConditions(keyObject);
-        return this._getOne<any>(conditions, {...opt});
+        return this._getOne<T>(conditions, {...opt});
     }
     count(keyObject: Partial<ProductTableKeyType>, opt?: GetQueryPropertyType) {
         const conditions = this.getKeyConditions(keyObject);

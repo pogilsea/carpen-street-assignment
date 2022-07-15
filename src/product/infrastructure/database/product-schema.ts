@@ -18,6 +18,6 @@ export type ProductTableSchemaType = {
 export enum ProductStatus {
     INITIALIZED = 'INITIALIZED',
     REVIEW_REQUESTED = 'REVIEW_REQUESTED',
-    CONFIRMED = 'CONFIRMED',
+    PUBLISHED = 'PUBLISHED',
     EDIT_REQUESTED = 'EDIT_REQUESTED',
 }
