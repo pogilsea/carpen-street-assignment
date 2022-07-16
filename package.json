@@ -4,7 +4,7 @@
   "description": "product api",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node_modules/.bin/mocha $(find ./ -name '*.spec.js') --recursive",
     "start": "node ./dist/app.js"
   },
   "author": "haejoong kim",
