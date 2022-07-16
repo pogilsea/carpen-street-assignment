@@ -63,9 +63,9 @@ export class ProductByEditorRouteHandler extends BaseRouteHandler {
         try {
             const token = await this.getAuthorizedUser(req);
             this.assertAuthorizedUserRole(token, [ROLE.EDITOR]);
-            await this.queryRequestReviewProducts.run();
+            const products = await this.queryRequestReviewProducts.run();
             // HTTP 응답값 처리
-            return res.send({responseCode: 200, resultMessage: 'Success'});
+            return res.send({responseCode: 200, resultMessage: 'Success', result: {products}});
         } catch (err) {
             return next(err);
         }

@@ -7,6 +7,19 @@ export class TestControl {
         chai.use(chaiHttp);
     }
     request = {
+        get: (uri: string, header: object = {}): Promise<{status: number; body: any}> => {
+            return new Promise((resolve) => {
+                chai.request(app)
+                    .get(uri)
+                    .set(header)
+                    .end((err, res) => {
+                        if (err) {
+                            console.log('chai request err', err);
+                        }
+                        resolve({status: res.status, body: res.body});
+                    });
+            });
+        },
         post: (uri: string, json: any, header: object = {}): Promise<{status: number; body: any}> => {
             return new Promise((resolve) => {
                 chai.request(app)
